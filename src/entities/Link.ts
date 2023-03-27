@@ -1,4 +1,4 @@
-import{Entity, PrimaryColumn, Column, OneToOne, Relation} from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToOne, Relation } from 'typeorm';
 import { User } from './User';
 
 @Entity()
@@ -12,10 +12,9 @@ export class Link {
   @Column()
   lastAccessedDate: Date;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   numHits: number;
 
   @OneToOne(() => User, (user) => user.link)
   user: Relation<Link>;
 }
-
