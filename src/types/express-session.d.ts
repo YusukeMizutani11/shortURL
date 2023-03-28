@@ -13,7 +13,7 @@ declare module 'express-session' {
     };
 
     isLoggedIn: boolean;
-    logInAttempts: number;
+    // logInAttempts: number; not required for this project
     logInTimeout: string;
   }
 }
