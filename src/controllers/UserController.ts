@@ -1,8 +1,24 @@
 import { Request, Response } from 'express';
 import argon2 from 'argon2';
 import { isBefore, parseISO, formatDistanceToNow } from 'date-fns';
-import { addNewUser, getUserByUsername } from '../models/UserModel';
+import { addNewUser, getUserByUsername, allUserData } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
+
+async function getUser(req: Request, res: Response): Promise<void> {
+  const { username } = req.params as UserNameParams;
+  const user = await getUserByUsername(username);
+
+  if (!user) {
+    res.sendStatus(404);
+    return;
+  }
+  console.log(user);
+  res.json(user);
+}
+
+async function getAllUsers(req: Request, res: Response): Promise<void> {
+  res.json(await allUserData());
+}
 
 async function registerUser(req: Request, res: Response): Promise<void> {
   const { username, password } = req.body as AuthRequest;
@@ -65,4 +81,4 @@ async function logIn(req: Request, res: Response): Promise<void> {
   res.sendStatus(200);
 }
 
-export { registerUser, logIn };
+export { getUser, getAllUsers, registerUser, logIn };

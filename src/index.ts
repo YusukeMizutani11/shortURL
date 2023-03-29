@@ -4,7 +4,7 @@ import express, { Express } from 'express';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
-import { registerUser, logIn } from './controllers/UserController';
+import { getUser, getAllUsers, registerUser, logIn } from './controllers/UserController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -23,6 +23,9 @@ app.use(
 );
 
 app.use(express.json());
+
+app.get('/api/users/:username', getUser); // get user by username
+app.get('/api/users', getAllUsers); // get all users
 
 app.post('/api/users', registerUser); // Create an account
 app.post('/api/login', logIn); // Log in to an account

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, Relation } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation } from 'typeorm';
 import { Link } from './Link';
 
 @Entity()
@@ -18,7 +18,6 @@ export class User {
   @Column({ default: false })
   isAdmin: boolean;
 
-  @OneToOne(() => Link, (link) => link.user)
-  @JoinColumn()
-  link: Relation<Link>;
+  @OneToMany(() => Link, (links) => links.user)
+  links: Relation<Link>;
 }

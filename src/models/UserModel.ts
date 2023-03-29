@@ -20,7 +20,16 @@ async function addNewUser(username: string, passwordHash: string): Promise<User 
 async function getUserByUsername(username: string): Promise<User | null> {
   // TODO: Get the user by where the username matches the parameter
   // This should also retrieve the `links` relation
-  return await userRepository.findOne({ where: { username } });
+  const user = await userRepository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.links', 'links')
+    .where('user.username = :username', { username })
+    .getOne();
+  return user;
 }
 
-export { addNewUser, getUserByUsername };
+async function allUserData(): Promise<User[]> {
+  return await userRepository.find();
+}
+
+export { addNewUser, getUserByUsername, allUserData };
