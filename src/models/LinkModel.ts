@@ -1,6 +1,8 @@
 import { createHash } from 'crypto';
 import { AppDataSource } from '../dataSource';
 import { Link } from '../entities/Link';
+import { User } from '../entities/User';
+// import { getUserById } from './UserModel';
 
 const linkRepository = AppDataSource.getRepository(Link);
 
@@ -31,4 +33,70 @@ function createLinkId(originalUrl: string, userId: string): string {
   return linkId;
 }
 
-export { getLinkById, createLinkId };
+async function createNewLink(originalUrl: string, linkId: string, creator: User): Promise<Link> {
+  const timeNow = new Date();
+  let newLink = new Link();
+  newLink.originalUrl = originalUrl;
+  newLink.linkId = linkId;
+  newLink.lastAccessedDate = timeNow;
+  newLink.numHits = 0;
+  newLink.user = creator;
+
+  newLink = await linkRepository.save(newLink);
+  return newLink;
+}
+
+// async function updateLinkVisits(link: Link): Promise<Link> {
+//   // Increment the link's number of hits property
+//   link.numHits += 1;
+
+//   // Create a new date object and assign it to the link's `lastAccessedOn` property.
+//   const now = new Date();
+//   link.lastAccessedDate = now;
+
+//   // Update the link's numHits and lastAccessedOn in the database
+//   const updatedLink = await linkRepository.save(link);
+
+//   // return the updated link
+//   return updatedLink;
+// }
+
+// async function getLinksByUserId(userId: string): Promise<Link[]> {
+//   const user = await getUserById(userId);
+//   if (user.isAdmin) {
+//     const links = await linkRepository
+//       .createQueryBuilder('link')
+//       .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
+//       .leftJoin('link.user', 'user')
+//       .select([
+//         'link.linkId',
+//         'link.originalUrl',
+//         'link.numHits',
+//         'link.lastAccessedOn',
+//         'link.user',
+//         'user.userId',
+//         'user.username',
+//         'user.isPro',
+//         'user.isAdmin',
+//       ])
+//       .getMany();
+//   } else {
+//     const links = await linkRepository
+//       .createQueryBuilder('link')
+//       .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
+//       .leftJoin('link.user', 'user')
+//       .select([
+//         'link.linkId',
+//         'link.originalUrl',
+//         'user',
+//         'user.userId',
+//         'user.username',
+//         'user.isAdmin',
+//       ])
+//       .getMany();
+//   }
+
+//   return links;
+// }
+
+export { getLinkById, createLinkId, createNewLink };

@@ -6,3 +6,7 @@ type AuthRequest = {
 type UserNameParams = {
   username: string;
 };
+
+type LinkIdParam = {
+  targetLinkId: string;
+};

@@ -5,6 +5,7 @@ import express, { Express } from 'express';
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
 import { getUser, getAllUsers, registerUser, logIn } from './controllers/UserController';
+import { shortenUrl } from './controllers/LinkController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -29,6 +30,7 @@ app.get('/api/users', getAllUsers); // get all users
 
 app.post('/api/users', registerUser); // Create an account
 app.post('/api/login', logIn); // Log in to an account
+app.post('/api/links', shortenUrl); // create a new shortened link
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);
