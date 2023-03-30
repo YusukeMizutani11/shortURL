@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createLinkId, createNewLink } from '../models/LinkModel';
+import { getLinkById, createLinkId, createNewLink } from '../models/LinkModel';
 import { getUserById } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
 
@@ -47,4 +47,26 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
   res.sendStatus(201);
 }
 
-export { shortenUrl };
+async function getOriginalUrl(req: Request, res: Response): Promise<void> {
+  // Retrieve the link data using the targetLinkId from the path parameter
+  const { targetLinkId } = req.params as LinkedIdParams;
+
+  // Check if you got back `null`
+  // send the appropriate response
+  if (!targetLinkId) {
+    res.sendStatus(404);
+  }
+
+  const targetLink = await getLinkById(targetLinkId);
+
+  // Call the appropriate function to increment the number of hits and the last accessed date
+  targetLink.numHits += 1;
+
+  const timeNow = new Date();
+  targetLink.lastAccessedDate = timeNow;
+
+  // Redirect the client to the original URL
+  res.redirect(targetLink.originalUrl);
+}
+
+export { shortenUrl, getOriginalUrl };

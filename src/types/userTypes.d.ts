@@ -7,6 +7,6 @@ type UserNameParams = {
   username: string;
 };
 
-type LinkIdParam = {
+type LinkedIdParams = {
   targetLinkId: string;
 };

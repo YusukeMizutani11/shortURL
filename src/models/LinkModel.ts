@@ -2,7 +2,6 @@ import { createHash } from 'crypto';
 import { AppDataSource } from '../dataSource';
 import { Link } from '../entities/Link';
 import { User } from '../entities/User';
-// import { getUserById } from './UserModel';
 
 const linkRepository = AppDataSource.getRepository(Link);
 
@@ -46,41 +45,41 @@ async function createNewLink(originalUrl: string, linkId: string, creator: User)
   return newLink;
 }
 
-// async function updateLinkVisits(link: Link): Promise<Link> {
-//   // Increment the link's number of hits property
-//   link.numHits += 1;
+async function updateLinkVisits(link: Link): Promise<Link> {
+  const modifiedLink = link;
+  // Increment the link's number of hits property
+  modifiedLink.numHits += 1;
 
-//   // Create a new date object and assign it to the link's `lastAccessedOn` property.
-//   const now = new Date();
-//   link.lastAccessedDate = now;
+  // Create a new date object and assign it to the link's `lastAccessedOn` property.
+  const now = new Date();
+  modifiedLink.lastAccessedDate = now;
 
-//   // Update the link's numHits and lastAccessedOn in the database
-//   const updatedLink = await linkRepository.save(link);
+  // Update the link's numHits and lastAccessedOn in the database
+  const updatedLink = await linkRepository.save(modifiedLink);
 
-//   // return the updated link
-//   return updatedLink;
-// }
+  // return the updated link
+  return updatedLink;
+}
 
 // async function getLinksByUserId(userId: string): Promise<Link[]> {
-//   const user = await getUserById(userId);
-//   if (user.isAdmin) {
-//     const links = await linkRepository
-//       .createQueryBuilder('link')
-//       .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
-//       .leftJoin('link.user', 'user')
-//       .select([
-//         'link.linkId',
-//         'link.originalUrl',
-//         'link.numHits',
-//         'link.lastAccessedOn',
-//         'link.user',
-//         'user.userId',
-//         'user.username',
-//         'user.isPro',
-//         'user.isAdmin',
-//       ])
-//       .getMany();
-//   } else {
+//   const links = await linkRepository
+//     .createQueryBuilder('link')
+//     .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
+//     .leftJoin('link.user', 'user')
+//     .select([
+//       'link.linkId',
+//       'link.originalUrl',
+//       'link.numHits',
+//       'link.lastAccessedOn',
+//       'link.user',
+//       'user.userId',
+//       'user.username',
+//       'user.isPro',
+//       'user.isAdmin',
+//     ])
+//     .getMany();
+// }
+
 //     const links = await linkRepository
 //       .createQueryBuilder('link')
 //       .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
@@ -99,4 +98,4 @@ async function createNewLink(originalUrl: string, linkId: string, creator: User)
 //   return links;
 // }
 
-export { getLinkById, createLinkId, createNewLink };
+export { getLinkById, createLinkId, createNewLink, updateLinkVisits };
