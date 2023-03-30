@@ -5,7 +5,7 @@ import express, { Express } from 'express';
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
 import { getUser, getAllUsers, registerUser, logIn } from './controllers/UserController';
-import { shortenUrl, getOriginalUrl } from './controllers/LinkController';
+import { shortenUrl, getOriginalUrl, getLinks } from './controllers/LinkController';
 
 const app: Express = express();
 const { PORT, COOKIE_SECRET } = process.env;
@@ -28,6 +28,7 @@ app.use(express.json());
 app.get('/api/users/:username', getUser); // get user by username
 app.get('/api/users', getAllUsers); // get all users
 app.get('/:targetLinkId', getOriginalUrl); // visit the shortened link
+app.get('/api/users/:targetUserId/links', getLinks); // get all links for the target user
 
 app.post('/api/users', registerUser); // Create an account
 app.post('/api/login', logIn); // Log in to an account

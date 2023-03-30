@@ -61,41 +61,51 @@ async function updateLinkVisits(link: Link): Promise<Link> {
   return updatedLink;
 }
 
-// async function getLinksByUserId(userId: string): Promise<Link[]> {
-//   const links = await linkRepository
-//     .createQueryBuilder('link')
-//     .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
-//     .leftJoin('link.user', 'user')
-//     .select([
-//       'link.linkId',
-//       'link.originalUrl',
-//       'link.numHits',
-//       'link.lastAccessedOn',
-//       'link.user',
-//       'user.userId',
-//       'user.username',
-//       'user.isPro',
-//       'user.isAdmin',
-//     ])
-//     .getMany();
-// }
+async function getLinksByUserId(userId: string): Promise<Link[]> {
+  const links = await linkRepository
+    .createQueryBuilder('link')
+    .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
+    .leftJoin('link.user', 'user')
+    .select([
+      'link.linkId',
+      'link.originalUrl',
+      'link.user',
+      'user.userId',
+      'user.username',
+      'user.isAdmin',
+    ])
+    .getMany();
 
-//     const links = await linkRepository
-//       .createQueryBuilder('link')
-//       .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
-//       .leftJoin('link.user', 'user')
-//       .select([
-//         'link.linkId',
-//         'link.originalUrl',
-//         'user',
-//         'user.userId',
-//         'user.username',
-//         'user.isAdmin',
-//       ])
-//       .getMany();
-//   }
+  return links;
+}
 
-//   return links;
-// }
+async function getLinksByUserIdForOwnAccount(userId: string): Promise<Link[]> {
+  // TODO: This function is pretty much the same but it should return the fields
+  const links = await linkRepository
+    .createQueryBuilder('link')
+    .where({ user: { userId } }) // NOTES: This is how you do nested WHERE clauses
+    .leftJoin('link.user', 'user')
+    .select([
+      'link.linkId',
+      'link.originalUrl',
+      'link.numHits',
+      'link.lastAccessedOn',
+      'link.user',
+      'user.userId',
+      'user.username',
+      'user.isPro',
+      'user.isAdmin',
+    ])
+    .getMany();
 
-export { getLinkById, createLinkId, createNewLink, updateLinkVisits };
+  return links;
+}
+
+export {
+  getLinkById,
+  createLinkId,
+  createNewLink,
+  updateLinkVisits,
+  getLinksByUserId,
+  getLinksByUserIdForOwnAccount,
+};
