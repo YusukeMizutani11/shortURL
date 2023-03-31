@@ -17,6 +17,7 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
   // send the appropriate response
   if (!req.session.isLoggedIn) {
     res.sendStatus(401);
+    return;
   }
 
   // Get the userId from `req.session`
@@ -27,6 +28,7 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
 
   if (!user) {
     res.sendStatus(404);
+    return;
   }
 
   // Check if the user is neither a "pro" nor an "admin" account
@@ -37,6 +39,7 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
     const userLinks = user.links;
     if (userLinks.length >= 5) {
       res.sendStatus(403);
+      return;
     }
   }
 
@@ -45,7 +48,6 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
   // Respond with status 201 if the insert was successful
   const { originalUrl } = req.body as NewLinkRequest;
   const linkId = createLinkId(originalUrl, user.userId);
-
   try {
     await createNewLink(originalUrl, linkId, user);
   } catch (err) {
@@ -65,6 +67,7 @@ async function getOriginalUrl(req: Request, res: Response): Promise<void> {
   // send the appropriate response
   if (!targetLinkId) {
     res.sendStatus(404);
+    return;
   }
 
   let targetLink = await getLinkById(targetLinkId);
@@ -82,6 +85,7 @@ async function getLinks(req: Request, res: Response): Promise<void> {
 
   if (!user) {
     res.sendStatus(404);
+    return;
   }
 
   if (authenticatedUser.isAdmin) {
@@ -95,6 +99,7 @@ async function deleteUserLink(req: Request, res: Response): Promise<void> {
   const { isLoggedIn, authenticatedUser } = req.session;
   if (!isLoggedIn) {
     res.sendStatus(401); // 401 Unauthorized
+    return;
   }
 
   const { targetLinkId } = req.params as LinkedIdParams;
@@ -102,11 +107,13 @@ async function deleteUserLink(req: Request, res: Response): Promise<void> {
   const linkExists = getLinkById(targetLinkId);
   if (!linkExists) {
     res.sendStatus(404);
+    return;
   }
 
   const linkExistsInUser = await linkBelongsToUser(targetLinkId, authenticatedUser.userId);
   if (!linkExistsInUser) {
     res.sendStatus(403); // 403 Forbidden
+    return;
   }
 
   await deleteLinkById(targetLinkId);

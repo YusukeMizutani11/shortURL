@@ -26,6 +26,7 @@ async function registerUser(req: Request, res: Response): Promise<void> {
 
   if (existingUser) {
     res.sendStatus(409);
+    return;
   }
 
   // IMPORTANT: Hash the password
@@ -57,6 +58,7 @@ async function logIn(req: Request, res: Response): Promise<void> {
   const { passwordHash } = user;
   if (!(await argon2.verify(passwordHash, password))) {
     res.sendStatus(403); // 403 Not Found - pass doesn't match
+    return;
   }
   await req.session.clearSession();
 
