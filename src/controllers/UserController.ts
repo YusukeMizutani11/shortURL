@@ -61,12 +61,13 @@ async function logIn(req: Request, res: Response): Promise<void> {
   await req.session.clearSession();
 
   // add data to the session
-  req.session.authenticatedUserForPro = {
+  req.session.authenticatedUser = {
     userId: user.userId,
-  };
-  req.session.authenticatedUserForAdmin = {
     username: user.username,
+    isPro: user.isPro,
+    isAdmin: user.isAdmin,
   };
+
   req.session.isLoggedIn = true;
   res.sendStatus(200);
 }

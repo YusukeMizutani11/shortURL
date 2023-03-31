@@ -5,11 +5,11 @@ declare module 'express-session' {
     clearSession(): Promise<void>; // DO NOT MODIFY THIS!
 
     // NOTES: Our example app's custom session properties:
-    authenticatedUserForPro: {
+    authenticatedUser: {
       userId: string;
-    };
-    authenticatedUserForAdmin: {
       username: string;
+      isPro: boolean;
+      isAdmin: boolean;
     };
 
     isLoggedIn: boolean;

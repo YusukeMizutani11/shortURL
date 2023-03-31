@@ -101,6 +101,25 @@ async function getLinksByUserIdForOwnAccount(userId: string): Promise<Link[]> {
   return links;
 }
 
+async function linkBelongsToUser(linkId: string, userId: string): Promise<boolean> {
+  const linkExists = await linkRepository
+    .createQueryBuilder('link')
+    .leftJoinAndSelect('link.user', 'user')
+    .where('link.linkId = :linkId', { linkId })
+    .andWhere('user.userId = :userId', { userId })
+    .getExists();
+
+  return linkExists;
+}
+
+async function deleteLinkById(linkId: string): Promise<void> {
+  await linkRepository
+    .createQueryBuilder('link')
+    .delete()
+    .where('linkId = :linkId', { linkId })
+    .execute();
+}
+
 export {
   getLinkById,
   createLinkId,
@@ -108,4 +127,6 @@ export {
   updateLinkVisits,
   getLinksByUserId,
   getLinksByUserIdForOwnAccount,
+  linkBelongsToUser,
+  deleteLinkById,
 };

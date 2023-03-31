@@ -3,3 +3,7 @@ type DatabaseConstraintError = {
   columnName?: string;
   message?: string;
 };
+
+type NewLinkRequest = {
+  originalUrl: string;
+};
