@@ -36,12 +36,13 @@ async function registerUser(req: Request, res: Response): Promise<void> {
     // IMPORTANT: Store the `passwordHash` and NOT the plaintext password
     const newUser = await addNewUser(username, passwordHash);
     console.log(newUser);
-    res.sendStatus(201);
   } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);
     res.status(500).json(databaseErrorMessage);
   }
+
+  res.redirect('/login');
 }
 
 async function logIn(req: Request, res: Response): Promise<void> {
@@ -71,7 +72,7 @@ async function logIn(req: Request, res: Response): Promise<void> {
   };
 
   req.session.isLoggedIn = true;
-  res.sendStatus(200);
+  res.redirect('/shrink');
 }
 
 export { getUser, getAllUsers, registerUser, logIn };

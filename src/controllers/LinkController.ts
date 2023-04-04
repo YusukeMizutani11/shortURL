@@ -3,11 +3,11 @@ import {
   getLinkById,
   createLinkId,
   createNewLink,
-  updateLinkVisits,
   getLinksByUserId,
   getLinksByUserIdForOwnAccount,
   linkBelongsToUser,
   deleteLinkById,
+  updateLinkVisits,
 } from '../models/LinkModel';
 import { getUserById } from '../models/UserModel';
 import { parseDatabaseError } from '../utils/db-utils';
@@ -16,7 +16,7 @@ async function shortenUrl(req: Request, res: Response): Promise<void> {
   // Make sure the user is logged in
   // send the appropriate response
   if (!req.session.isLoggedIn) {
-    res.sendStatus(401);
+    res.redirect('/login');
     return;
   }
 
@@ -120,4 +120,4 @@ async function deleteUserLink(req: Request, res: Response): Promise<void> {
   res.sendStatus(200); // successfully deleted
 }
 
-export { shortenUrl, getOriginalUrl, getLinks, deleteUserLink };
+export { shortenUrl, getLinks, deleteUserLink, getOriginalUrl };

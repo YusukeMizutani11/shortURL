@@ -124,9 +124,9 @@ export {
   getLinkById,
   createLinkId,
   createNewLink,
-  updateLinkVisits,
   getLinksByUserId,
   getLinksByUserIdForOwnAccount,
   linkBelongsToUser,
   deleteLinkById,
+  updateLinkVisits,
 };
